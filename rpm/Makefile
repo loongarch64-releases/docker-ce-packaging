@@ -67,8 +67,9 @@ RUN?=docker run --rm \
 FEDORA_RELEASES ?= fedora-42 fedora-43 fedora-44
 CENTOS_RELEASES ?= centos-9 centos-10
 RHEL_RELEASES ?= rhel-8 rhel-9 rhel-10
+ANOLIS_RELEASES ?= anolis-23
 
-DISTROS := $(FEDORA_RELEASES) $(CENTOS_RELEASES) $(RHEL_RELEASES)
+DISTROS := $(FEDORA_RELEASES) $(CENTOS_RELEASES) $(RHEL_RELEASES) $(ANOLIS_RELEASES)
 BUNDLES := $(patsubst %,rpmbuild/bundles-ce-%-$(DPKG_ARCH).tar.gz,$(DISTROS))
 
 .PHONY: help
@@ -82,13 +83,16 @@ clean: ## remove build artifacts
 	-docker builder prune -f --filter until=24h
 
 .PHONY: rpm
-rpm: fedora centos ## build all rpm packages
+rpm: anolis fedora centos ## build all rpm packages
 
 .PHONY: fedora
 fedora: $(FEDORA_RELEASES) ## build all fedora rpm packages
 
 .PHONY: centos
 centos: $(CENTOS_RELEASES) ## build all centos rpm packages
+
+.PHONE: anolis
+anolis: $(ANOLIS_RELEASES)
 
 .PHONY: rhel
 rhel: $(RHEL_RELEASES) ## build all rhel rpm packages
